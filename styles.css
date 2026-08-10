@@ -16,6 +16,8 @@
   --sans: "Jost", Arial, sans-serif;
   --container: 1120px;
   --ease: cubic-bezier(.22, 1, .36, 1);
+  /* Ύψος της μπάρας στοιχείων επικοινωνίας — το header «κολλάει» ακριβώς από κάτω. */
+  --topbar-h: 40px;
 }
 
 * { box-sizing: border-box; }
@@ -70,10 +72,53 @@ a { color: inherit; text-decoration: none; }
   background: linear-gradient(90deg, var(--violet-200), var(--violet-700) 55%, var(--blush));
 }
 
+/* ---------- Topbar (στοιχεία επικοινωνίας) ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 21;
+  min-height: var(--topbar-h);
+  background: linear-gradient(90deg, var(--ink), var(--violet-700));
+  color: var(--white);
+}
+.topbar-inner {
+  min-height: var(--topbar-h);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem clamp(1.1rem, 3vw, 2.6rem);
+  padding-block: .35rem;
+}
+.topbar a {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .78rem;
+  font-weight: 400;
+  letter-spacing: .04em;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, .9);
+  transition: color .3s var(--ease);
+}
+.topbar a:hover { color: var(--white); }
+.topbar svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  stroke: var(--violet-200);
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke .3s var(--ease);
+}
+.topbar a:hover svg { stroke: var(--blush); }
+
 /* ---------- Header ---------- */
 .site-header {
   position: sticky;
-  top: 0;
+  top: var(--topbar-h);
   z-index: 20;
   background: rgba(253, 252, 255, .78);
   backdrop-filter: blur(14px) saturate(140%);
@@ -1171,14 +1216,14 @@ h3 { margin: 0; color: var(--violet-700); }
   .nav-toggle { display: block; }
   .nav-links {
     position: fixed;
-    inset: 74px 0 auto 0;
+    inset: calc(var(--topbar-h) + 74px) 0 auto 0;
     display: grid;
     gap: .1rem;
     padding: 1rem;
     background: var(--cream);
     border-bottom: 1px solid var(--line);
-    /* Το panel ξεκινά στα 74px, οπότε πρέπει να ανέβει και το ύψος του και το offset. */
-    transform: translateY(calc(-100% - 74px));
+    /* Το panel ξεκινά κάτω από topbar + nav, οπότε ανεβαίνει ύψος + offset. */
+    transform: translateY(calc(-100% - var(--topbar-h) - 74px));
     visibility: hidden;
     transition: transform .35s var(--ease), visibility 0s linear .35s;
   }
@@ -1207,8 +1252,8 @@ h3 { margin: 0; color: var(--violet-700); }
   .hero { padding: 0 0 3.5rem; }
   .hero-grid { gap: 2.5rem; }
   .hero-copy {
-    min-height: calc(100vh - 74px);
-    min-height: calc(100svh - 74px);
+    min-height: calc(100vh - var(--topbar-h) - 74px);
+    min-height: calc(100svh - var(--topbar-h) - 74px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1262,12 +1307,19 @@ h3 { margin: 0; color: var(--violet-700); }
   }
   .g-item::after { opacity: .8; }
   .footer-bottom { flex-direction: column; }
+
+  /* Σε tablet/κινητό κρατάμε τηλέφωνο + email στη μπάρα, η διεύθυνση είναι στο footer. */
+  .topbar .topbar-address { display: none; }
 }
 
 @media (max-width: 520px) {
   .stats-grid { grid-template-columns: 1fr 1fr; }
   .service-grid,
   .service-grid-wide { grid-template-columns: 1fr; }
+  :root { --topbar-h: 36px; }
+  .topbar-inner { gap: .4rem 1rem; }
+  .topbar a { font-size: .7rem; }
+  .topbar svg { width: 13px; height: 13px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
