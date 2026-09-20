@@ -27,7 +27,6 @@ const clinic = {
   hours: "Τρίτη, Πέμπτη, Παρασκευή 17:00–21:00 · Σάββατο 10:00–14:00",
   hoursShort: "Τρ, Πε, Πα 17:00–21:00 · Σα 10:00–14:00",
   availability: "Τρίτη, Πέμπτη, Παρασκευή & Σάββατο",
-  appointmentDuration: "30'",
   maps: "https://maps.app.goo.gl/PjHjvuGM3FMqLaKS8",
 };
 
@@ -46,28 +45,160 @@ const bio = [
   "Δίπλωμα Μαστολογίας, Ελληνική Σχολή Μαστολογίας, μετά από επιτυχία στις τελικές εξετάσεις της σχολής.",
 ];
 
-const services = [
-  "Υπερηχογράφημα μαστών",
-  "Παρακολούθηση κύησης και μαιευτικός υπερηχογραφικός έλεγχος",
-  "Διερεύνηση υπογονιμότητας ζεύγους",
-  "Πρόκληση ωορρηξίας και παρακολούθηση κύκλου",
-  "Ενδομήτρια σπερματέγχυση (IUI)",
-  "Συμβουλευτική και προετοιμασία για εξωσωματική γονιμοποίηση (IVF)",
-  "Αντιμετώπιση πολυκυστικών ωοθηκών (PCOS)",
-  "Αντιμετώπιση ενδομητρίωσης",
-  "Υστεροσκοπική χειρουργική",
-  "Λαπαροσκοπική και ρομποτική γυναικολογική χειρουργική",
-  "Αντιμετώπιση διαταραχών περιόδου και εμμηνόπαυσης",
-  "Ουρογυναικολογία και προβλήματα ακράτειας",
-  "Συμβουλευτική αντισύλληψης και οικογενειακού προγραμματισμού",
+// Εικονίδια υπηρεσιών — λεπτές γραμμές, στο ύφος του μαρμάρινου design.
+const icons = {
+  kyisi: '<circle cx="19" cy="11" r="5"/><path d="M19 16c-5 0-8 4-8 9v12h5l1 10h9"/><path d="M27 25c4 0 7 3 7 7s-3 7-7 7"/><circle cx="26" cy="32" r="3"/>',
+  ultrasound: '<path d="M10 34a18 18 0 0 1 28-14"/><path d="M15 36a12 12 0 0 1 18-10"/><path d="M20 38a6 6 0 0 1 8-5"/><circle cx="34" cy="34" r="2.5"/>',
+  tokos: '<path d="M24 38S10 30 10 20a7 7 0 0 1 14-3 7 7 0 0 1 14 3c0 10-14 18-14 18Z"/><path d="M18 22h4l2-4 2 8 2-4h4"/>',
+  fertility: '<circle cx="19" cy="24" r="10"/><path d="M40 18c-6 1-10 4-11 8"/><path d="M34 33c3-2 5-5 6-9"/><circle cx="19" cy="24" r="3.5"/>',
+  cycle: '<path d="M36 18a14 14 0 1 0 2 10"/><path d="M38 12v9h-9"/><circle cx="24" cy="24" r="3"/>',
+  iui: '<path d="M30 10l8 8"/><path d="M33 15 19 29l-3 8 8-3 14-14Z"/><path d="M22 22l6 6"/><circle cx="13" cy="37" r="1.6"/>',
+  ivf: '<path d="M12 22h24v4a12 12 0 0 1-24 0Z"/><path d="M10 22h28"/><circle cx="24" cy="27" r="4"/><path d="M24 12v6"/>',
+  xeirourgiki: '<path d="M14 12v10a6 6 0 0 0 12 0V12"/><path d="M20 28v8a6 6 0 0 0 12 0v-6"/><circle cx="32" cy="26" r="4"/>',
+  pap: '<circle cx="24" cy="24" r="6"/><path d="M24 10v6M24 32v6M10 24h6M32 24h6"/><path d="M14 14l4.5 4.5M29.5 29.5 34 34M34 14l-4.5 4.5M18.5 29.5 14 34"/>',
+  mastos: '<path d="M18 12c-2 8-8 10-8 18a14 14 0 0 0 28 0c0-8-6-10-8-18"/><circle cx="24" cy="30" r="4"/>',
+  efivi: '<path d="M24 38V20"/><path d="M24 24c-8 0-10-6-10-10 6 0 10 3 10 10Z"/><path d="M24 26c8 0 10-6 10-11-6 0-10 4-10 11Z"/>',
+  antisillipsi: '<path d="M24 10l12 5v10c0 8-5 12-12 15-7-3-12-7-12-15V15Z"/><path d="M19 24l4 4 7-8"/>',
+  emminopausi: '<path d="M32 12a14 14 0 1 0 6 16 11 11 0 0 1-6-16Z"/><circle cx="34" cy="18" r="1.6"/>',
+  pcos: '<circle cx="24" cy="24" r="12"/><circle cx="20" cy="20" r="2.4"/><circle cx="28" cy="21" r="2"/><circle cx="22" cy="29" r="2.2"/><circle cx="29" cy="28" r="1.8"/>',
+  mitra: '<path d="M16 14c0 8 1 12 4 15a6 6 0 0 0 8 0c3-3 4-7 4-15"/><path d="M16 14c-4 2-6 6-6 10"/><path d="M32 14c4 2 6 6 6 10"/><circle cx="9" cy="26" r="3"/><circle cx="39" cy="26" r="3"/><path d="M24 31v7"/>',
+  ourogynaikologia: '<path d="M24 10s10 11 10 17a10 10 0 0 1-20 0c0-6 10-17 10-17Z"/><path d="M19 27a5 5 0 0 0 5 5"/>',
+  ysteroskopisi: '<path d="M10 30l14-6"/><path d="M8 28l4 6"/><path d="M26 16c0 7 1 10 3 13a5 5 0 0 0 7 0c2-3 3-6 3-13"/><path d="M32 32v6"/>',
+  robotiki: '<path d="M12 38V26l10-8"/><path d="M22 18l10 4v8"/><circle cx="12" cy="24" r="3"/><circle cx="23" cy="17" r="3"/><circle cx="33" cy="31" r="5"/><path d="M33 31h6"/>',
+};
+
+// Οι υπηρεσίες σε ομάδες, με σύντομη περιγραφή η καθεμία.
+const serviceGroups = [
+  {
+    slug: "maieftiki",
+    title: "Μαιευτική",
+    lead: "Από το πρώτο υπερηχογράφημα έως τον τοκετό, με τακτική παρακολούθηση και ενημέρωση σε κάθε στάδιο.",
+    items: [
+      [
+        "Παρακολούθηση κύησης",
+        "Τακτική παρακολούθηση σε όλη τη διάρκεια της εγκυμοσύνης, με προγραμματισμένες επισκέψεις, εξετάσεις και ενημέρωση για κάθε τρίμηνο.",
+        "kyisi",
+      ],
+      [
+        "Μαιευτικός υπερηχογραφικός έλεγχος",
+        "Υπερηχογραφικός έλεγχος της ανάπτυξης και της ευεξίας του εμβρύου, στα χρονικά σημεία που ορίζουν οι σύγχρονες κατευθυντήριες οδηγίες.",
+        "ultrasound",
+      ],
+      [
+        "Φυσιολογικός τοκετός",
+        "Προετοιμασία και υποστήριξη για φυσιολογικό τοκετό, με αναλυτική ενημέρωση για τα στάδια και τις επιλογές σας.",
+        "tokos",
+      ],
+    ],
+  },
+  {
+    slug: "gonimotita",
+    title: "Γονιμότητα",
+    lead: "Διερεύνηση και αντιμετώπιση της υπογονιμότητας του ζευγαριού, με μετεκπαίδευση στην υποβοηθούμενη αναπαραγωγή και τη χειρουργική αναπαραγωγής.",
+    items: [
+      [
+        "Διερεύνηση υπογονιμότητας ζεύγους",
+        "Πλήρης έλεγχος και για τους δύο συντρόφους — ορμονικός έλεγχος, υπερηχογράφημα, έλεγχος σαλπίγγων και σπερμοδιάγραμμα — ώστε να βρεθεί η αιτία.",
+        "fertility",
+      ],
+      [
+        "Πρόκληση ωορρηξίας και παρακολούθηση κύκλου",
+        "Παρακολούθηση του κύκλου με υπερηχογραφήματα και, όπου χρειάζεται, φαρμακευτική πρόκληση ωορρηξίας με εξατομικευμένο σχήμα.",
+        "cycle",
+      ],
+      [
+        "Ενδομήτρια σπερματέγχυση (IUI)",
+        "Απλή, ανώδυνη τεχνική υποβοηθούμενης αναπαραγωγής: το επεξεργασμένο σπέρμα τοποθετείται στη μήτρα την ημέρα της ωορρηξίας.",
+        "iui",
+      ],
+      [
+        "Εξωσωματική γονιμοποίηση (IVF)",
+        "Συμβουλευτική και προετοιμασία για την εξωσωματική γονιμοποίηση: επιλογή πρωτοκόλλου, προεξεταστικός έλεγχος και συνεργασία με τη μονάδα αναπαραγωγής.",
+        "ivf",
+      ],
+      [
+        "Χειρουργική αναπαραγωγής",
+        "Επεμβάσεις που αποκαθιστούν τη γονιμότητα — ινομυώματα, πολύποδες, συμφύσεις, ενδομητρίωση — με λαπαροσκόπηση και υστεροσκόπηση.",
+        "xeirourgiki",
+      ],
+    ],
+  },
+  {
+    slug: "gynaikologia",
+    title: "Γυναικολογία",
+    lead: "Ο τακτικός έλεγχος και η αντιμετώπιση των συχνότερων γυναικολογικών προβλημάτων, σε κάθε ηλικία.",
+    items: [
+      [
+        "Γυναικολογικός έλεγχος — Τεστ ΠΑΠ",
+        "Ο ετήσιος προληπτικός έλεγχος: κλινική εξέταση, τεστ Παπανικολάου, έλεγχος HPV και γυναικολογικό υπερηχογράφημα.",
+        "pap",
+      ],
+      [
+        "Έλεγχος και υπερηχογράφημα μαστών",
+        "Κλινική εξέταση και υπερηχογράφημα μαστών, με εκπαίδευση στην αυτοεξέταση. Δίπλωμα Μαστολογίας της Ελληνικής Σχολής Μαστολογίας.",
+        "mastos",
+      ],
+      [
+        "Εφηβική γυναικολογία",
+        "Η πρώτη επαφή με τον γυναικολόγο, με διακριτικότητα: κύκλος, πόνος περιόδου, ακμή, εμβολιασμός HPV και σωστή ενημέρωση.",
+        "efivi",
+      ],
+      [
+        "Οικογενειακός προγραμματισμός και αντισύλληψη",
+        "Επιλογή της κατάλληλης μεθόδου αντισύλληψης για κάθε φάση της ζωής, με ενημέρωση για τα οφέλη και τις παρενέργειες.",
+        "antisillipsi",
+      ],
+      [
+        "Εμμηνόπαυση και διαταραχές περιόδου",
+        "Αντιμετώπιση των συμπτωμάτων της εμμηνόπαυσης και των διαταραχών του κύκλου, με σύγχρονη και εξατομικευμένη θεραπεία.",
+        "emminopausi",
+      ],
+      [
+        "Πολυκυστικές ωοθήκες (PCOS)",
+        "Διάγνωση και αντιμετώπιση του συνδρόμου πολυκυστικών ωοθηκών — κύκλος, ορμονικό προφίλ, βάρος και γονιμότητα.",
+        "pcos",
+      ],
+      [
+        "Ενδομητρίωση",
+        "Διερεύνηση του χρόνιου πυελικού πόνου και αντιμετώπιση της ενδομητρίωσης, φαρμακευτικά ή με ελάχιστα επεμβατική χειρουργική.",
+        "mitra",
+      ],
+      [
+        "Ουρογυναικολογία και ακράτεια",
+        "Αντιμετώπιση της ακράτειας ούρων και της χαλάρωσης του πυελικού εδάφους — αντικείμενο του μεταπτυχιακού στη Χειρουργική Ελάσσονος Πυέλου και Περινέου.",
+        "ourogynaikologia",
+      ],
+    ],
+  },
+  {
+    slug: "xeirourgiki",
+    title: "Ελάχιστα επεμβατική χειρουργική",
+    lead: "Λαπαροσκοπική, υστεροσκοπική, ρομποτική και κολπική χειρουργική, με μετεκπαίδευση στο Bethesda Duisburg της Γερμανίας.",
+    items: [
+      [
+        "Υστεροσκόπηση",
+        "Διαγνωστική και επεμβατική υστεροσκόπηση για πολύποδες, ινομυώματα, συμφύσεις και διαφράγματα, χωρίς τομές.",
+        "ysteroskopisi",
+      ],
+      [
+        "Λαπαροσκοπική και ρομποτική χειρουργική",
+        "Επεμβάσεις με ελάχιστες τομές και ρομποτική υποστήριξη: λιγότερος πόνος, μικρότερη παραμονή στην κλινική, ταχύτερη επιστροφή στην καθημερινότητα.",
+        "robotiki",
+      ],
+    ],
+  },
 ];
+
+const services = serviceGroups.flatMap((group) => group.items.map(([name]) => name));
 
 // Σύντομες ετικέτες για το ticker (τα πλήρη ονόματα είναι πολύ μεγάλα)
 const tickerItems = [
+  "Γονιμότητα",
+  "Εξωσωματική Γονιμοποίηση",
   "Ρομποτική Χειρουργική",
   "Λαπαροσκοπική Χειρουργική",
   "Υστεροσκόπηση",
-  "Υπογονιμότητα",
+  "Διερεύνηση Υπογονιμότητας",
   "Ενδομητρίωση",
   "Παρακολούθηση Κύησης",
   "Μαστολογία",
@@ -87,7 +218,7 @@ const institutions = [
 // Μετρήσιμα στοιχεία — όλα προκύπτουν από τα δεδομένα του πελάτη
 const stats = [
   [String(services.length), "Γυναικολογικές υπηρεσίες"],
-  ["30", "Λεπτά ανά ραντεβού", "'"],
+  [String(serviceGroups.length), "Τομείς φροντίδας"],
   ["4", "Ημέρες ραντεβού"],
   [String(bio.length), "Τίτλοι & μετεκπαιδεύσεις"],
 ];
@@ -207,7 +338,7 @@ function head(title, description, path, extraLd = []) {
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   ${[clinicLd, ...extraLd].map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`).join("\n  ")}
 </head>
@@ -288,7 +419,7 @@ const cta = `<section class="cta-section">
       <div class="reveal">
         <p class="eyebrow">Ραντεβού</p>
         <h2>Κλείστε το ραντεβού σας</h2>
-        <p>${esc(clinic.hours)} · διάρκεια ραντεβού ${esc(clinic.appointmentDuration)}</p>
+        <p>${esc(clinic.hours)}</p>
       </div>
       <div class="cta-actions reveal" style="--i:1">
         <a href="tel:${clinic.phoneHref}" class="btn btn-primary magnetic">Καλέστε ${esc(clinic.phone)}</a>
@@ -296,6 +427,30 @@ const cta = `<section class="cta-section">
       </div>
     </div>
   </section>`;
+
+// Οι υπηρεσίες που προβάλλονται στην αρχική (μία «βιτρίνα» από κάθε τομέα)
+const featured = [
+  "Παρακολούθηση κύησης",
+  "Μαιευτικός υπερηχογραφικός έλεγχος",
+  "Φυσιολογικός τοκετός",
+  "Διερεύνηση υπογονιμότητας ζεύγους",
+  "Εξωσωματική γονιμοποίηση (IVF)",
+  "Ενδομήτρια σπερματέγχυση (IUI)",
+  "Γυναικολογικός έλεγχος — Τεστ ΠΑΠ",
+  "Έλεγχος και υπερηχογράφημα μαστών",
+  "Λαπαροσκοπική και ρομποτική χειρουργική",
+];
+
+const allItems = serviceGroups.flatMap((group) => group.items);
+const itemByName = new Map(allItems.map((item) => [item[0], item]));
+
+function serviceCard([name, text, icon], index, heading = "h3") {
+  return `<article class="service-card spotlight reveal" style="--i:${index}">
+            <span class="service-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none">${icons[icon]}</svg></span>
+            <${heading}>${esc(name)}</${heading}>
+            <p>${esc(text)}</p>
+          </article>`;
+}
 
 function galleryGrid(limit = gallery.length) {
   return gallery
@@ -319,9 +474,6 @@ function home() {
     <section class="hero">
       <div class="hero-bg" aria-hidden="true">
         <span class="orb orb-1" data-parallax="26"></span>
-        <span class="orb orb-2" data-parallax="-18"></span>
-        <span class="orb orb-3" data-parallax="12"></span>
-        <div class="hero-lines"></div>
         <div class="hero-noise"></div>
       </div>
       <div class="container hero-grid">
@@ -406,7 +558,7 @@ function home() {
           <p class="eyebrow">Προσέγγιση</p>
           <h2 class="line-reveal"><span>Σύγχρονη και ανθρώπινη φροντίδα</span></h2>
           <p class="lead">Στόχος μας είναι η σύγχρονη, επιστημονικά τεκμηριωμένη και ανθρώπινη προσέγγιση, με σεβασμό στις ανάγκες και τις επιθυμίες κάθε γυναίκας.</p>
-          <p>Κάθε ραντεβού διαρκεί ${esc(clinic.appointmentDuration)}, ώστε να υπάρχει χρόνος για πλήρη εξέταση, ενημέρωση και σχεδιασμό της θεραπείας.</p>
+          <p>Σε κάθε ραντεβού υπάρχει χρόνος για πλήρη εξέταση, ενημέρωση και σχεδιασμό της θεραπείας, χωρίς βιασύνη.</p>
         </div>
       </div>
     </section>
@@ -427,17 +579,17 @@ function home() {
         </div>
       </div>
     </section>
-    <section class="section section-alt">
+    <section class="section section-marble">
       <div class="container">
-        <div class="section-head reveal">
-          <p class="eyebrow">Υπηρεσίες</p>
-          <h2>Ολοκληρωμένη γυναικολογική φροντίδα</h2>
-          <p class="lead">${esc(String(services.length))} υπηρεσίες, από την παρακολούθηση της κύησης και τη γονιμότητα έως την ελάχιστα επεμβατική χειρουργική.</p>
+        <div class="section-head section-head-center reveal">
+          <p class="eyebrow">${esc(clinic.name)}</p>
+          <h2>Υπηρεσίες</h2>
+          <p class="lead">${esc(String(services.length))} υπηρεσίες σε τέσσερις τομείς — μαιευτική, γονιμότητα, γυναικολογία και ελάχιστα επεμβατική χειρουργική.</p>
         </div>
         <div class="service-grid">
-          ${services.map((service, index) => `<article class="service-card spotlight reveal" style="--i:${index}"><span>${num(index)}</span><h3>${esc(service)}</h3></article>`).join("\n          ")}
+          ${featured.map((name, index) => serviceCard(itemByName.get(name), index)).join("\n          ")}
         </div>
-        <a class="text-link arrow-link" href="ypiresies.html">Όλες οι υπηρεσίες</a>
+        <p class="center-link"><a class="text-link arrow-link" href="ypiresies.html">Όλες οι υπηρεσίες</a></p>
       </div>
     </section>
     <section class="section steps-section">
@@ -448,7 +600,7 @@ function home() {
         </div>
         <ol class="steps">
           <li class="reveal" style="--i:0"><span>01</span><h3>Επικοινωνία</h3><p>Τηλεφωνικά στο ${esc(clinic.phone)} ή με email στο ${esc(clinic.email)}.</p></li>
-          <li class="reveal" style="--i:1"><span>02</span><h3>Ραντεβού</h3><p>${esc(clinic.hours)} · διάρκεια ${esc(clinic.appointmentDuration)} για κάθε επίσκεψη.</p></li>
+          <li class="reveal" style="--i:1"><span>02</span><h3>Ραντεβού</h3><p>${esc(clinic.hours)}. Επιλέγουμε μαζί την ώρα που σας εξυπηρετεί.</p></li>
           <li class="reveal" style="--i:2"><span>03</span><h3>Επίσκεψη</h3><p>${esc(clinic.address)}. Εξέταση, ενημέρωση και πλάνο παρακολούθησης.</p></li>
         </ol>
       </div>
@@ -548,11 +700,27 @@ function servicesPage() {
         <p class="eyebrow">Υπηρεσίες</p>
         <h1>Γυναικολογικές υπηρεσίες</h1>
         <p>Σύγχρονη, επιστημονικά τεκμηριωμένη και ανθρώπινη προσέγγιση, με σεβασμό στις ανάγκες και τις επιθυμίες κάθε γυναίκας.</p>
+        <ul class="chip-nav">
+          ${serviceGroups.map((group) => `<li><a href="#${group.slug}">${esc(group.title)}</a></li>`).join("\n          ")}
+        </ul>
       </div>
     </section>
-    <section class="section">
-      <div class="container service-grid service-grid-wide">
-        ${services.map((service, index) => `<article class="service-card spotlight reveal" style="--i:${index}"><span>${num(index)}</span><h2>${esc(service)}</h2></article>`).join("\n        ")}
+    <section class="section section-marble">
+      <div class="container">
+        ${serviceGroups
+          .map(
+            (group, groupIndex) => `<div class="service-block" id="${group.slug}">
+          <div class="section-head section-head-center reveal">
+            <p class="eyebrow">${num(groupIndex)} · Τομέας</p>
+            <h2>${esc(group.title)}</h2>
+            <p class="lead">${esc(group.lead)}</p>
+          </div>
+          <div class="service-grid">
+            ${group.items.map((item, index) => serviceCard(item, index)).join("\n            ")}
+          </div>
+        </div>`,
+          )
+          .join("\n        ")}
       </div>
     </section>
     ${cta}
@@ -568,7 +736,7 @@ function contact() {
       <div class="container">
         <p class="eyebrow">Επικοινωνία</p>
         <h1>Κλείστε ραντεβού</h1>
-        <p>${esc(clinic.hours)} · διάρκεια ραντεβού ${esc(clinic.appointmentDuration)}</p>
+        <p>${esc(clinic.hours)}</p>
       </div>
     </section>
     <section class="section">
@@ -581,7 +749,6 @@ function contact() {
           <div class="reveal" style="--i:4"><span>Διεύθυνση</span><a href="${clinic.maps}" target="_blank" rel="noopener noreferrer">${esc(clinic.address)}</a></div>
           <div class="reveal" style="--i:5"><span>Ωράριο</span><strong>Τρίτη, Πέμπτη, Παρασκευή 17:00–21:00</strong></div>
           <div class="reveal" style="--i:6"><span></span><strong>Σάββατο 10:00–14:00</strong></div>
-          <div class="reveal" style="--i:7"><span>Διάρκεια</span><strong>${esc(clinic.appointmentDuration)} ανά ραντεβού</strong></div>
         </div>
         <aside class="contact-aside reveal" style="--i:2">
           <h2>Άμεση επικοινωνία</h2>
