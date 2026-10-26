@@ -1,11 +1,12 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { education, licenses, career, skills, conferences, presentations, publications } from "./cv.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 // Ο πελάτης δεν έχει ακόμη domain. Άλλαξε μόνο εδώ όταν κατοχυρωθεί.
 const BASE = "https://peitsidis.gr";
-const UPDATED = "2026-08-09";
+const UPDATED = "2026-10-12";
 
 const clinic = {
   name: "Δρ. Νικόλαος Πεϊτσίδης",
@@ -223,17 +224,25 @@ const stats = [
   [String(bio.length), "Τίτλοι & μετεκπαιδεύσεις"],
 ];
 
-// Κολλάζ — οι φωτογραφίες του ιατρείου με τα spans του grid
+// Κολλάζ — οι φωτογραφίες του ιατρείου με τα spans του grid.
+// Οι λεζάντες είναι όπως τις διόρθωσε ο γιατρός (10/2026). Η φωτογραφία στην
+// κονσόλα da Vinci (robotiki-konsola.jpg) αφαιρέθηκε με εντολή του.
+// Τα spans γεμίζουν τις 4 στήλες: 1+2+1 · 2+1+1 · 2+2 (το τελευταίο 2 είναι το g-note).
 const gallery = [
-  ["robotiki-konsola", "Ρομποτική χειρουργική στην κονσόλα da Vinci", "g-tall", 750, 1000],
+  ["laparoskopiki-epemvasi", "Ανοιχτό ογκολογικό χειρουργείο με τον καθηγητή Harald Krentel", "g-tall", 450, 1000],
   ["xeirourgeio-omada", "Χειρουργική ομάδα σε γυναικολογική επέμβαση", "g-big", 1000, 1000],
-  ["robotiki-xeirourgiki", "Ρομποτικό χειρουργικό σύστημα σε πλήρη ανάπτυξη", "g-tall", 720, 720],
+  ["endoskopiki-apeikonisi", "Ελάχιστα επεμβατική λαπαροσκοπική χειρουργική", "g-tall", 451, 1000],
   ["synedrio-omilia", "Ομιλία σε ιατρικό συνέδριο γυναικολογίας", "g-wide", 1000, 750],
   ["pistopoiisi-duisburg", "Πιστοποίηση μετεκπαίδευσης, Bethesda Duisburg", "g-std", 750, 1000],
-  ["laparoskopiki-epemvasi", "Λαπαροσκοπική γυναικολογική επέμβαση", "g-std", 450, 1000],
-  ["endoskopiki-apeikonisi", "Ενδοσκοπική απεικόνιση στο χειρουργείο", "g-wide", 451, 1000],
-  ["elachista-epemvatiki", "Ελάχιστα επεμβατική χειρουργική τεχνική", "g-wide", 720, 720],
+  ["robotiki-xeirourgiki", "Υστεροσκόπηση για αντιμετώπιση υπογονιμότητας", "g-std", 720, 720],
+  ["elachista-epemvatiki", "Ελάχιστα επεμβατική λαπαροσκοπική χειρουργική", "g-wide", 720, 720],
 ];
+
+// Το 8ο πλακίδιο του κολλάζ: κείμενο αντί για φωτογραφία, ώστε το grid να κλείνει χωρίς κενό.
+const galleryNote = {
+  value: "100+",
+  label: "επεμβάσεις ως Clinical Fellow στην ελάχιστα επεμβατική γυναικολογία, Bethesda Duisburg",
+};
 
 const pages = [
   ["index.html", "1.0"],
@@ -369,7 +378,7 @@ function header(active) {
     <nav class="nav container" aria-label="Κύρια πλοήγηση">
       <a class="brand" href="index.html" aria-label="${attr(clinic.name)}">
         <img src="assets/mark.png" alt="" class="brand-mark" width="522" height="640" />
-        <span class="brand-text"><strong>${esc(clinic.brandTop)}</strong><em>${esc(clinic.brandSub)}</em></span>
+        <span class="brand-text">${esc(clinic.name)}</span>
       </a>
       <button class="nav-toggle" aria-label="Άνοιγμα μενού" aria-expanded="false"><span></span><span></span><span></span></button>
       <ul class="nav-links">
@@ -452,17 +461,50 @@ function serviceCard([name, text, icon], index, heading = "h3") {
           </article>`;
 }
 
-function galleryGrid(limit = gallery.length) {
-  return gallery
-    .slice(0, limit)
-    .map(
-      ([slug, caption, span, w, h], index) =>
-        `<figure class="g-item ${span} reveal" style="--i:${index}">
+function galleryGrid() {
+  const figures = gallery.map(
+    ([slug, caption, span, w, h], index) =>
+      `<figure class="g-item ${span} reveal" style="--i:${index}">
             <img src="assets/gallery/${slug}.jpg" alt="${attr(caption)}" width="${w}" height="${h}" loading="lazy" decoding="async" />
             <figcaption>${esc(caption)}</figcaption>
           </figure>`,
+  );
+  figures.push(
+    `<div class="g-note g-wide reveal" style="--i:${gallery.length}">
+            <strong>${esc(galleryNote.value)}</strong>
+            <span>${esc(galleryNote.label)}</span>
+          </div>`,
+  );
+  return figures.join("\n          ");
+}
+
+// Χρονολόγιο βιογραφικού: περίοδος αριστερά, τίτλος + παράγραφοι (+ bullets) δεξιά
+function cvTimeline(entries) {
+  return entries
+    .map(
+      (entry, index) => `<article class="reveal" style="--i:${Math.min(index, 5)}">
+            <span>${esc(entry.period)}</span>
+            <div>
+              <h3>${esc(entry.title)}</h3>
+              ${entry.body.map((text) => `<p>${esc(text)}</p>`).join("\n              ")}
+              ${entry.bullets ? `<ul>${entry.bullets.map((text) => `<li>${esc(text)}</li>`).join("")}</ul>` : ""}
+            </div>
+          </article>`,
     )
     .join("\n          ");
+}
+
+function publicationList(items) {
+  return items
+    .map(
+      (pub, index) => `<li class="reveal" style="--i:${Math.min(index, 5)}">
+              <strong>${esc(pub.title)}</strong>
+              <span class="pub-authors">${esc(pub.authors)}</span>
+              ${pub.journal ? `<span class="pub-journal">${esc(pub.journal)}</span>` : ""}
+              ${pub.doi ? `<a href="https://doi.org/${attr(pub.doi)}" target="_blank" rel="noopener noreferrer">doi:${esc(pub.doi)}</a>` : ""}
+            </li>`,
+    )
+    .join("\n            ");
 }
 
 function home() {
@@ -654,15 +696,123 @@ function doctor() {
         </div>
       </div>
     </section>
-    <section class="section section-alt">
+    <section class="section section-alt" id="viografiko">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Πλήρες βιογραφικό</p>
+          <h2>Με μια ματιά</h2>
+        </div>
+        <ul class="chip-nav cv-nav reveal" style="--i:1">
+          <li><a href="#spoudes">Σπουδές</a></li>
+          <li><a href="#poreia">Επαγγελματική πορεία</a></li>
+          <li><a href="#titloi">Τίτλοι &amp; γλώσσες</a></li>
+          <li><a href="#synedria">Συνέδρια</a></li>
+          <li><a href="#anakoinoseis">Ανακοινώσεις</a></li>
+          <li><a href="#dimosiefseis">Δημοσιεύσεις</a></li>
+        </ul>
+        <div class="timeline">
+          ${bio.map((item, index) => `<article class="reveal" style="--i:${index}"><span>${num(index)}</span><p>${esc(item)}</p></article>`).join("\n          ")}
+        </div>
+      </div>
+    </section>
+    <section class="section" id="spoudes">
       <div class="container">
         <div class="section-head reveal">
           <p class="eyebrow">Σπουδές &amp; Μετεκπαίδευση</p>
           <h2>Ακαδημαϊκή πορεία</h2>
         </div>
-        <div class="timeline">
-          ${bio.map((item, index) => `<article class="reveal" style="--i:${index}"><span>${num(index)}</span><p>${esc(item)}</p></article>`).join("\n          ")}
+        <div class="timeline timeline-cv">
+          ${cvTimeline(education)}
         </div>
+      </div>
+    </section>
+    <section class="section section-alt" id="poreia">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Επαγγελματική απασχόληση</p>
+          <h2>Επαγγελματική πορεία</h2>
+        </div>
+        <div class="timeline timeline-cv">
+          ${cvTimeline(career)}
+        </div>
+      </div>
+    </section>
+    <section class="section" id="titloi">
+      <div class="container cv-grid">
+        <div>
+          <div class="section-head reveal">
+            <p class="eyebrow">Ειδικότητα &amp; άδειες</p>
+            <h2>Τίτλοι</h2>
+          </div>
+          <div class="timeline timeline-cv">
+            ${cvTimeline(licenses)}
+          </div>
+        </div>
+        <div>
+          <div class="section-head reveal">
+            <p class="eyebrow">Ατομικές δεξιότητες</p>
+            <h2>Γλώσσες</h2>
+          </div>
+          <div class="skills">
+            ${skills
+              .map(
+                (group, index) => `<article class="reveal" style="--i:${index}">
+              <h3>${esc(group.title)}</h3>
+              <ul>${group.items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
+            </article>`,
+              )
+              .join("\n            ")}
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section section-alt" id="synedria">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Συνεχιζόμενη εκπαίδευση</p>
+          <h2>Συνέδρια &amp; σεμινάρια</h2>
+          <p class="lead">${esc(String(conferences.length))} συνέδρια, σεμινάρια και πιστοποιήσεις, από το 2009 έως σήμερα.</p>
+        </div>
+        <ul class="cv-list">
+          ${conferences.map((item, index) => `<li class="reveal" style="--i:${Math.min(index, 5)}">${esc(item)}</li>`).join("\n          ")}
+        </ul>
+      </div>
+    </section>
+    <section class="section" id="anakoinoseis">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Επιστημονικό έργο</p>
+          <h2>Προφορικές ανακοινώσεις &amp; συμμετοχές</h2>
+        </div>
+        <div class="presentations">
+          ${presentations
+            .map(
+              (group, index) => `<article class="reveal" style="--i:${Math.min(index, 5)}">
+            <h3>${esc(group.event)}</h3>
+            <ul>
+              ${group.works.map((work) => `<li><strong>${esc(work.title)}</strong><span>${esc(work.authors)}</span></li>`).join("\n              ")}
+            </ul>
+          </article>`,
+            )
+            .join("\n          ")}
+        </div>
+      </div>
+    </section>
+    <section class="section section-alt" id="dimosiefseis">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow">Δημοσιεύσεις</p>
+          <h2>Δημοσιεύσεις σε επιστημονικά περιοδικά</h2>
+          <p class="lead">${esc(String(publications.pubmed.length))} δημοσιεύσεις με ευρετηρίαση στο PubMed και ${esc(String(publications.other.length))} εκτός PubMed.</p>
+        </div>
+        <h3 class="pub-heading">Εντός PubMed</h3>
+        <ol class="pub-list">
+          ${publicationList(publications.pubmed)}
+        </ol>
+        <h3 class="pub-heading">Εκτός PubMed</h3>
+        <ol class="pub-list" start="${publications.pubmed.length + 1}">
+          ${publicationList(publications.other)}
+        </ol>
       </div>
     </section>
     <section class="section">
