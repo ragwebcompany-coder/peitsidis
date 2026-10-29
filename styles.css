@@ -13,7 +13,7 @@
   --dark-text: #c3c9d1;
   --line: #dde6ef;
   --white: #ffffff;
-  --marble: url("assets/marble-warm.jpg");
+  --marble: url("assets/marble-calacatta.jpg");
   --display: "Didact Gothic", "Commissioner", Arial, sans-serif;
   --sans: "Commissioner", Arial, sans-serif;
   --container: 1060px;
@@ -214,7 +214,7 @@ p { margin: 0 0 1rem; }
   position: relative;
   background: var(--marble) center / cover no-repeat fixed;
 }
-.section-marble::before { content: ""; position: absolute; inset: 0; background: rgba(248, 241, 231, .25); pointer-events: none; }
+.section-marble::before { content: ""; position: absolute; inset: 0; background: rgba(252, 249, 244, .3); pointer-events: none; }
 .section-marble > .container { position: relative; }
 .split {
   display: grid;
@@ -468,4 +468,17 @@ p { margin: 0 0 1rem; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal, .hero-card, .page-hero h1, .page-hero p, .page-hero .eyebrow { opacity: 1 !important; transform: none !important; }
+}
+
+/* Σύντομο βιογραφικό — ετικέτες ειδικοτήτων */
+.nowrap { white-space: nowrap; }
+.bio-tags { list-style: none; display: flex; flex-wrap: wrap; gap: .45rem; margin: 0 0 1.6rem; padding: 0; }
+.bio-tags li {
+  padding: .35rem .8rem;
+  font-size: .78rem; letter-spacing: .02em; color: var(--blue-700);
+  background: var(--blue-50); border: 1px solid var(--blue-200);
+}
+.split-top { align-items: start; }
+@media (min-width: 821px) {
+  .split-top > .photo { position: sticky; top: 120px; }
 }
