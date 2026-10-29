@@ -6,7 +6,7 @@ import { education, licenses, career, skills, conferences, presentations, public
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 // Ο πελάτης δεν έχει ακόμη domain. Άλλαξε μόνο εδώ όταν κατοχυρωθεί.
 const BASE = "https://peitsidis.gr";
-const UPDATED = "2026-10-12";
+const UPDATED = "2026-10-29";
 
 const clinic = {
   name: "Δρ. Νικόλαος Πεϊτσίδης",
@@ -16,20 +16,28 @@ const clinic = {
   doctor: "Δρ. Νικόλαος Πεϊτσίδης, MD, MSc, MIGS, PhD",
   specialty: "Γυναικολόγος",
   role: "Obstetrician-Gynecologist",
-  roleEl: "Μαιευτήρας Γυναικολόγος Χειρουργός",
-  slogan: "ΣΥΓΧΡΟΝΗ, ΤΕΚΜΗΡΙΩΜΕΝΗ ΚΑΙ ΑΝΘΡΩΠΙΝΗ ΓΥΝΑΙΚΟΛΟΓΙΑ",
+  roleEl: "Μαιευτήρας – Χειρουργός Γυναικολόγος Αναπαραγωγής",
+  slogan: "Από το θαύμα της σύλληψης… στο δώρο της Γέννησης.",
+  sloganSub: "Μαζί σε κάθε στάδιο της μητρότητας!",
   phone: "+30 697 841 0100",
   phoneHref: "+306978410100",
   email: "nickpeits@windowslive.com",
   city: "Πολίχνη Θεσσαλονίκης",
-  street: "Γράμμου 3",
+  street: "Γράμμου 3 (Πλατεία Μετεώρων)",
   postalCode: "56532",
-  address: "Γράμμου 3, Πολίχνη Θεσσαλονίκης 565 32",
+  address: "Γράμμου 3 (Πλατεία Μετεώρων), Πολίχνη Θεσσαλονίκης 565 32",
   hours: "Τρίτη, Πέμπτη, Παρασκευή 17:00–21:00 · Σάββατο 10:00–14:00",
   hoursShort: "Τρ, Πε, Πα 17:00–21:00 · Σα 10:00–14:00",
   availability: "Τρίτη, Πέμπτη, Παρασκευή & Σάββατο",
   maps: "https://maps.app.goo.gl/PjHjvuGM3FMqLaKS8",
+  mapEmbed: "https://www.google.com/maps?q=" + encodeURIComponent("Γράμμου 3, Πολίχνη, Θεσσαλονίκη") + "&output=embed",
 };
+
+// Κείμενα του γιατρού (10/2026)
+const welcome =
+  "Σας καλωσορίζουμε στον διαδικτυακό τόπο του Μαιευτήρα – Χειρουργού Γυναικολόγου Αναπαραγωγής Δρ Νικολάου Πεϊτσίδη. Σκοπός μας είναι η σωστή και υπεύθυνη ενημέρωση σε συχνά ερωτήματα που σας απασχολούν, καθώς και η παροχή συμβουλών σε όλο το φάσμα της σύγχρονης Μαιευτικής και Γυναικολογίας.";
+const care =
+  "Ολοκληρωμένη Μαιευτική και Γυναικολογική φροντίδα, σχεδιασμένη με ασφάλεια και ενσυναίσθηση για εσάς και το μωρό σας.";
 
 // Ώρες λειτουργίας σε μορφή schema.org
 const openingHours = [
@@ -135,8 +143,8 @@ const serviceGroups = [
         "pap",
       ],
       [
-        "Έλεγχος και υπερηχογράφημα μαστών",
-        "Κλινική εξέταση και υπερηχογράφημα μαστών, με εκπαίδευση στην αυτοεξέταση. Δίπλωμα Μαστολογίας της Ελληνικής Σχολής Μαστολογίας.",
+        "Κλινική εξέταση και ψηλάφηση μαστών",
+        "Κλινική εξέταση και ψηλάφηση των μαστών, με εκπαίδευση στην αυτοεξέταση. Δίπλωμα Μαστολογίας της Ελληνικής Σχολής Μαστολογίας.",
         "mastos",
       ],
       [
@@ -192,38 +200,6 @@ const serviceGroups = [
 
 const services = serviceGroups.flatMap((group) => group.items.map(([name]) => name));
 
-// Σύντομες ετικέτες για το ticker (τα πλήρη ονόματα είναι πολύ μεγάλα)
-const tickerItems = [
-  "Γονιμότητα",
-  "Εξωσωματική Γονιμοποίηση",
-  "Ρομποτική Χειρουργική",
-  "Λαπαροσκοπική Χειρουργική",
-  "Υστεροσκόπηση",
-  "Διερεύνηση Υπογονιμότητας",
-  "Ενδομητρίωση",
-  "Παρακολούθηση Κύησης",
-  "Μαστολογία",
-  "Ουρογυναικολογία",
-];
-
-// Φορείς εκπαίδευσης και μετεκπαίδευσης (από το βιογραφικό του πελάτη)
-const institutions = [
-  "Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης",
-  "Ιατρική Σχολή ΑΠΘ · Διδακτορικό",
-  "Πανεπιστήμιο Θεσσαλίας · MSc",
-  "Evangelisches Krankenhaus Bethesda · Duisburg",
-  "Ελληνική Σχολή Μαστολογίας",
-  "Χειρουργική Ελάσσονος Πυέλου & Περινέου",
-];
-
-// Μετρήσιμα στοιχεία — όλα προκύπτουν από τα δεδομένα του πελάτη
-const stats = [
-  [String(services.length), "Γυναικολογικές υπηρεσίες"],
-  [String(serviceGroups.length), "Τομείς φροντίδας"],
-  ["4", "Ημέρες ραντεβού"],
-  [String(bio.length), "Τίτλοι & μετεκπαιδεύσεις"],
-];
-
 // Κολλάζ — οι φωτογραφίες του ιατρείου με τα spans του grid.
 // Οι λεζάντες είναι όπως τις διόρθωσε ο γιατρός (10/2026). Η φωτογραφία στην
 // κονσόλα da Vinci (robotiki-konsola.jpg) αφαιρέθηκε με εντολή του.
@@ -254,12 +230,6 @@ const pages = [
 const esc = (value) =>
   String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-// Σπάει μια λέξη σε γράμματα-spans για kinetic typography (με stagger index)
-let kineticIndex = 0;
-const kinetic = (word) =>
-  `<span class="k-word">${[...word]
-    .map((char) => `<span class="k-char" style="--k:${kineticIndex++}">${esc(char)}</span>`)
-    .join("")}</span>`;
 const attr = (value) => esc(value).replace(/"/g, "&quot;");
 const num = (index) => String(index + 1).padStart(2, "0");
 const out = (path, html) => {
@@ -326,7 +296,7 @@ function head(title, description, path, extraLd = []) {
   <meta name="description" content="${attr(description)}" />
   <meta name="author" content="${attr(clinic.doctor)}" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
-  <meta name="theme-color" content="#f2eefb" />
+  <meta name="theme-color" content="#ffffff" />
   <meta name="geo.region" content="GR-B" />
   <meta name="geo.placename" content="${attr(clinic.city)}" />
   <link rel="canonical" href="${BASE}/${path}" />
@@ -347,7 +317,7 @@ function head(title, description, path, extraLd = []) {
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Commissioner:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   ${[clinicLd, ...extraLd].map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`).join("\n  ")}
 </head>
@@ -383,7 +353,7 @@ function header(active) {
       <button class="nav-toggle" aria-label="Άνοιγμα μενού" aria-expanded="false"><span></span><span></span><span></span></button>
       <ul class="nav-links">
         <li><a href="index.html"${current("home")}>Αρχική</a></li>
-        <li><a href="o-giatros.html"${current("doctor")}>Ο Γιατρός</a></li>
+        <li><a href="o-giatros.html"${current("doctor")}>Ο Ιατρός</a></li>
         <li><a href="ypiresies.html"${current("services")}>Υπηρεσίες</a></li>
         <li><a href="epikoinonia.html"${current("contact")}>Επικοινωνία</a></li>
         <li><a href="epikoinonia.html" class="btn btn-nav">Ραντεβού</a></li>
@@ -392,28 +362,46 @@ function header(active) {
   </header>`;
 }
 
+const fIcon = {
+  pin: '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
+  mail: '<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3.4 7.2 8.6 5.8 8.6-5.8"/>',
+  phone: '<path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.2 11.5 11.5 0 0 0 3.6.6 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.4a1 1 0 0 1 1 1 11.5 11.5 0 0 0 .6 3.6 1 1 0 0 1-.2 1Z"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+};
+const svg = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${fIcon[name]}</svg>`;
+
+// Footer σε τέσσερις στήλες, όπως στο drtarnanidis.gr: στοιχεία, επικοινωνία, σύνδεσμοι, χάρτης.
 function footer() {
   return `<footer class="site-footer">
-    <div class="container footer-inner">
-      <div>
-        <img src="assets/mark-light.png" alt="${attr(clinic.name)}" class="footer-logo" width="522" height="640" />
-        <p class="footer-tag">${esc(clinic.slogan)}</p>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <p class="footer-name">${esc(clinic.name)}</p>
+        <p>${esc(clinic.roleEl)}</p>
+        <p><strong>MD, MSc, MIGS, PhD</strong></p>
       </div>
-      <nav class="footer-links" aria-label="Πλοήγηση">
+      <div class="footer-col">
+        <h2>Επικοινωνία</h2>
+        <ul class="footer-contact">
+          <li>${svg("pin")}<a href="${attr(clinic.maps)}" target="_blank" rel="noopener noreferrer">${esc(clinic.address)}</a></li>
+          <li>${svg("mail")}<a href="mailto:${attr(clinic.email)}">${esc(clinic.email)}</a></li>
+          <li>${svg("phone")}<a href="tel:${attr(clinic.phoneHref)}">${esc(clinic.phone)}</a></li>
+          <li>${svg("clock")}<span>${esc(clinic.hoursShort)}</span></li>
+        </ul>
+      </div>
+      <nav class="footer-col footer-links" aria-label="Σύνδεσμοι">
+        <h2>Σύνδεσμοι</h2>
         <a href="index.html">Αρχική</a>
-        <a href="o-giatros.html">Ο Γιατρός</a>
+        <a href="o-giatros.html">Ο Ιατρός</a>
         <a href="ypiresies.html">Υπηρεσίες</a>
         <a href="epikoinonia.html">Επικοινωνία</a>
       </nav>
-      <div class="footer-contact">
-        <a href="tel:${clinic.phoneHref}">${esc(clinic.phone)}</a>
-        <a href="mailto:${clinic.email}">${esc(clinic.email)}</a>
-        <a href="${clinic.maps}" target="_blank" rel="noopener noreferrer">${esc(clinic.address)}</a>
-        <span>${esc(clinic.hoursShort)}</span>
+      <div class="footer-col">
+        <h2>Βρείτε μας στο χάρτη</h2>
+        <iframe class="footer-map" src="${attr(clinic.mapEmbed)}" title="Χάρτης — ${attr(clinic.address)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© <span id="year">${UPDATED.slice(0, 4)}</span> ${esc(clinic.name)} — ${esc(clinic.roleEl)}</p>
+      <p>© <span id="year">${UPDATED.slice(0, 4)}</span> ${esc(clinic.name)}</p>
       <p>Made by <a href="https://clinicbrain.gr/?utm_source=client-site&amp;utm_medium=footer&amp;utm_campaign=made-by" target="_blank" rel="noopener noreferrer">CLINICBRAIN</a></p>
     </div>
   </footer>
@@ -422,42 +410,30 @@ function footer() {
 </html>`;
 }
 
-const cta = `<section class="cta-section">
-    <div class="cta-aura" aria-hidden="true"></div>
-    <div class="container cta-inner">
-      <div class="reveal">
-        <p class="eyebrow">Ραντεβού</p>
-        <h2>Κλείστε το ραντεβού σας</h2>
-        <p>${esc(clinic.hours)}</p>
-      </div>
-      <div class="cta-actions reveal" style="--i:1">
-        <a href="tel:${clinic.phoneHref}" class="btn btn-primary magnetic">Καλέστε ${esc(clinic.phone)}</a>
-        <a href="mailto:${clinic.email}" class="btn btn-ghost magnetic">Email</a>
-      </div>
-    </div>
-  </section>`;
-
-// Οι υπηρεσίες που προβάλλονται στην αρχική (μία «βιτρίνα» από κάθε τομέα)
+// Οι εννέα υπηρεσίες της αρχικής (ίδια λογική με το drtarnanidis.gr)
 const featured = [
   "Παρακολούθηση κύησης",
-  "Μαιευτικός υπερηχογραφικός έλεγχος",
   "Φυσιολογικός τοκετός",
+  "Γυναικολογικός έλεγχος — Τεστ ΠΑΠ",
+  "Κλινική εξέταση και ψηλάφηση μαστών",
+  "Οικογενειακός προγραμματισμός και αντισύλληψη",
   "Διερεύνηση υπογονιμότητας ζεύγους",
   "Εξωσωματική γονιμοποίηση (IVF)",
-  "Ενδομήτρια σπερματέγχυση (IUI)",
-  "Γυναικολογικός έλεγχος — Τεστ ΠΑΠ",
-  "Έλεγχος και υπερηχογράφημα μαστών",
+  "Υστεροσκόπηση",
   "Λαπαροσκοπική και ρομποτική χειρουργική",
 ];
 
 const allItems = serviceGroups.flatMap((group) => group.items);
 const itemByName = new Map(allItems.map((item) => [item[0], item]));
 
-function serviceCard([name, text, icon], index, heading = "h3") {
-  return `<article class="service-card spotlight reveal" style="--i:${index}">
+const groupOf = new Map(serviceGroups.flatMap((group) => group.items.map(([name]) => [name, group.slug])));
+
+function serviceCard([name, text, icon], index, link = false) {
+  return `<article class="service-card reveal" style="--i:${index % 3}">
             <span class="service-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none">${icons[icon]}</svg></span>
-            <${heading}>${esc(name)}</${heading}>
+            <h3>${esc(name)}</h3>
             <p>${esc(text)}</p>
+            ${link ? `<a class="more-link" href="ypiresies.html#${groupOf.get(name)}">Περισσότερα</a>` : ""}
           </article>`;
 }
 
@@ -507,147 +483,94 @@ function publicationList(items) {
     .join("\n            ");
 }
 
+const slides = [
+  ["xeirourgeio", "Χειρουργική ομάδα σε γυναικολογική επέμβαση", "50% 30%"],
+  ["duisburg", "Πιστοποίηση μετεκπαίδευσης, Bethesda Duisburg", "50% 25%"],
+  ["synedrio", "Ομιλία σε ιατρικό συνέδριο γυναικολογίας", "50% 40%"],
+];
+
 function home() {
-  const description = `${clinic.doctor}, ${clinic.roleEl} στην Πολίχνη Θεσσαλονίκης. Ρομποτική και λαπαροσκοπική γυναικολογική χειρουργική, υπογονιμότητα, ενδομητρίωση, παρακολούθηση κύησης. Ραντεβού στο ${clinic.phone}.`;
-  kineticIndex = 0;
-  out("index.html", `${head(`${clinic.name} | ${clinic.specialty} Θεσσαλονίκη`, description, "index.html")}
+  const description = `${clinic.doctor}, ${clinic.roleEl} στην Πολίχνη Θεσσαλονίκης. Παρακολούθηση κύησης, υπογονιμότητα, ελάχιστα επεμβατική γυναικολογική χειρουργική. Ραντεβού στο ${clinic.phone}.`;
+  out("index.html", `${head(`${clinic.name} | Μαιευτήρας Γυναικολόγος Θεσσαλονίκη`, description, "index.html")}
   ${header("home")}
   <main id="main">
-    <section class="hero">
-      <div class="hero-bg" aria-hidden="true">
-        <span class="orb orb-1" data-parallax="26"></span>
-        <div class="hero-noise"></div>
-      </div>
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow eyebrow-live"><span class="pulse-dot"></span>${esc(clinic.address)}</p>
-          <h1 class="kinetic">
-            <span class="k-line">${kinetic("Νικόλαος")}</span>
-            <span class="k-line k-line-accent">${kinetic("Πεϊτσίδης")}</span>
-          </h1>
-          <p class="hero-tagline"><span class="shimmer">${esc(clinic.slogan)}</span></p>
-          <p class="hero-lead">MD, MSc, MIGS, PhD · ${esc(clinic.roleEl)}. Ελάχιστα επεμβατική, ρομποτική και λαπαροσκοπική γυναικολογική χειρουργική, με μετεκπαίδευση στη Γερμανία.</p>
-          <div class="hero-actions">
-            <a href="epikoinonia.html" class="btn btn-primary magnetic">Κλείστε ραντεβού</a>
-            <a href="ypiresies.html" class="btn btn-ghost magnetic">Δείτε υπηρεσίες</a>
-          </div>
-          <ul class="hero-chips">
-            <li style="--i:0">Ρομποτική Χειρουργική</li>
-            <li style="--i:1">Υπογονιμότητα</li>
-            <li style="--i:2">Ενδομητρίωση</li>
-            <li style="--i:3">Μαστολογία</li>
-          </ul>
-        </div>
-        <aside class="hero-panel tilt" aria-label="Στοιχεία ιατρείου">
-          <div class="panel-glow" aria-hidden="true"></div>
-          <div class="panel-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
-          <img class="panel-mark" src="assets/mark.png" alt="${attr(clinic.name)}" width="522" height="640" />
-          <svg class="ekg" viewBox="0 0 300 60" aria-hidden="true" focusable="false" preserveAspectRatio="none">
-            <path class="ekg-track" d="M0 30 H70 l10 -22 l12 44 l10 -30 l8 12 h14 l9 -18 l11 26 l9 -12 H300" />
-            <path class="ekg-pulse" d="M0 30 H70 l10 -22 l12 44 l10 -30 l8 12 h14 l9 -18 l11 26 l9 -12 H300" />
-          </svg>
-          <dl>
-            <div><dt>Ιατρός</dt><dd>${esc(clinic.doctor)}</dd></div>
-            <div><dt>Ειδικότητα</dt><dd>${esc(clinic.roleEl)}</dd></div>
-            <div><dt>Διεύθυνση</dt><dd>${esc(clinic.address)}</dd></div>
-            <div><dt>Ωράριο</dt><dd>${esc(clinic.hours)}</dd></div>
-          </dl>
-        </aside>
-      </div>
-      <a class="scroll-cue" href="#giatros" aria-label="Συνεχίστε παρακάτω"><span aria-hidden="true"></span>Scroll</a>
-    </section>
-    <section class="ticker" aria-label="Υπηρεσίες ιατρείου">
-      <div class="ticker-track">
-        ${[...tickerItems, ...tickerItems].map((service) => `<span>${esc(service)}</span>`).join("\n        ")}
-      </div>
-    </section>
-    <section class="stats-strip" aria-label="Με μια ματιά">
-      <div class="container stats-grid">
-        ${stats
+    <section class="hero-slider" aria-roledescription="carousel" aria-label="Φωτογραφίες">
+      <div class="slides">
+        ${slides
           .map(
-            ([value, label, suffix = ""], index) =>
-              `<article class="stat reveal" style="--i:${index}"><strong class="count" data-count="${value}" data-suffix="${attr(suffix)}">0${esc(suffix)}</strong><span>${esc(label)}</span></article>`,
+            ([slug, alt, pos], index) => `<figure class="slide${index === 0 ? " is-active" : ""}" aria-hidden="${index === 0 ? "false" : "true"}">
+          <img src="assets/slides/${slug}.jpg" alt="${attr(alt)}" style="object-position:${pos}" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" />
+        </figure>`,
           )
           .join("\n        ")}
       </div>
+      <div class="container hero-card-wrap">
+        <div class="hero-card">
+          <h1>Από το θαύμα της σύλληψης… <span>στο δώρο της Γέννησης.</span></h1>
+          <p class="hero-card-sub">${esc(clinic.sloganSub)}</p>
+          <p class="hero-card-role">${esc(clinic.roleEl)}<br /><strong>MD, MSc, MIGS, PhD</strong></p>
+        </div>
+      </div>
+      <button class="slider-arrow slider-prev" type="button" aria-label="Προηγούμενη φωτογραφία"><span aria-hidden="true"></span></button>
+      <button class="slider-arrow slider-next" type="button" aria-label="Επόμενη φωτογραφία"><span aria-hidden="true"></span></button>
+      <div class="slider-dots">
+        ${slides.map((_, index) => `<button type="button" aria-label="Φωτογραφία ${index + 1}"${index === 0 ? ' aria-current="true"' : ""}></button>`).join("")}
+      </div>
     </section>
-    <section class="section" id="giatros">
+    <section class="section section-tint">
       <div class="container split">
         <div class="reveal">
-          <p class="eyebrow">Ο Γιατρός</p>
-          <h2 class="line-reveal"><span>${esc(clinic.name)}</span></h2>
-          <p class="lead">${esc(bio[0])}</p>
+          <h2 class="display">Καλώς ήρθατε</h2>
+          <p>${esc(welcome)}</p>
+          <p class="accent-text">${esc(clinic.slogan)}<br />${esc(clinic.sloganSub)}</p>
+          <p>${esc(care)}</p>
+        </div>
+        <figure class="photo reveal" style="--i:1">
+          <img src="assets/gallery/xeirourgeio-omada.jpg" alt="Ο Δρ. Πεϊτσίδης με τη χειρουργική ομάδα" width="1000" height="1000" loading="lazy" decoding="async" />
+        </figure>
+      </div>
+    </section>
+    <section class="section section-dark" id="giatros">
+      <div class="container split split-reverse">
+        <figure class="photo photo-portrait reveal">
+          <img src="assets/giatros.jpg" alt="${attr(clinic.doctor)}" width="750" height="1000" loading="lazy" decoding="async" />
+        </figure>
+        <div class="reveal" style="--i:1">
+          <p class="eyebrow">Ο Ιατρός</p>
+          <h2 class="name-title">Νικόλαος<br />Πεϊτσίδης</h2>
+          <p>${esc(bio[0])}</p>
           <p>${esc(bio[1])}</p>
           <p>${esc(bio[5])}</p>
-          <a class="text-link arrow-link" href="o-giatros.html">Πλήρες βιογραφικό</a>
-        </div>
-        <div class="doctor-figure reveal" style="--i:1">
-          <img src="assets/giatros.jpg" alt="${attr(clinic.doctor)}" width="825" height="1100" loading="lazy" decoding="async" />
-          <figcaption><strong>${esc(clinic.doctor)}</strong><span>${esc(clinic.role)}</span></figcaption>
+          <a class="btn" href="o-giatros.html">Περισσότερα</a>
         </div>
       </div>
     </section>
-    <section class="section section-alt">
+    <section class="section section-tint">
       <div class="container split">
-        <div class="info-card tilt reveal">
-          <span class="card-badge">Germany</span>
-          <h3>Μετεκπαίδευση στη Γερμανία</h3>
+        <div class="reveal">
+          <h2 class="display">Μετεκπαίδευση στη Γερμανία</h2>
           <p>${esc(bio[3])}</p>
           <p>${esc(bio[4])}</p>
-          <div class="flag-row" aria-hidden="true"><span>GR</span><span>DE</span><span>MIGS</span></div>
+          <a class="btn" href="o-giatros.html#galeria">Περισσότερα</a>
         </div>
-        <div class="reveal" style="--i:1">
-          <p class="eyebrow">Προσέγγιση</p>
-          <h2 class="line-reveal"><span>Σύγχρονη και ανθρώπινη φροντίδα</span></h2>
-          <p class="lead">Στόχος μας είναι η σύγχρονη, επιστημονικά τεκμηριωμένη και ανθρώπινη προσέγγιση, με σεβασμό στις ανάγκες και τις επιθυμίες κάθε γυναίκας.</p>
-          <p>Σε κάθε ραντεβού υπάρχει χρόνος για πλήρη εξέταση, ενημέρωση και σχεδιασμό της θεραπείας, χωρίς βιασύνη.</p>
-        </div>
-      </div>
-    </section>
-    <section class="marquee-soft" aria-label="Ακαδημαϊκή πορεία">
-      <div class="marquee-track">
-        ${[...institutions, ...institutions].map((item) => `<span>${esc(item)}</span>`).join("\n        ")}
-      </div>
-    </section>
-    <section class="section" id="galeria">
-      <div class="container">
-        <div class="section-head reveal">
-          <p class="eyebrow">Το ιατρείο σε εικόνες</p>
-          <h2>Χειρουργείο, ρομποτική και εκπαίδευση</h2>
-          <p class="lead">Στιγμιότυπα από τη χειρουργική δραστηριότητα, τη ρομποτική χειρουργική και τη διαρκή εκπαίδευση.</p>
-        </div>
-        <div class="collage">
-          ${galleryGrid()}
-        </div>
+        <figure class="photo reveal" style="--i:1">
+          <img src="assets/gallery/elachista-epemvatiki.jpg" alt="Ελάχιστα επεμβατική λαπαροσκοπική χειρουργική" width="720" height="720" loading="lazy" decoding="async" />
+        </figure>
       </div>
     </section>
     <section class="section section-marble">
       <div class="container">
         <div class="section-head section-head-center reveal">
           <p class="eyebrow">${esc(clinic.name)}</p>
-          <h2>Υπηρεσίες</h2>
-          <p class="lead">${esc(String(services.length))} υπηρεσίες σε τέσσερις τομείς — μαιευτική, γονιμότητα, γυναικολογία και ελάχιστα επεμβατική χειρουργική.</p>
+          <h2 class="display">Υπηρεσίες</h2>
+          <p>${esc(care)}</p>
         </div>
         <div class="service-grid">
-          ${featured.map((name, index) => serviceCard(itemByName.get(name), index)).join("\n          ")}
+          ${featured.map((name, index) => serviceCard(itemByName.get(name), index, true)).join("\n          ")}
         </div>
-        <p class="center-link"><a class="text-link arrow-link" href="ypiresies.html">Όλες οι υπηρεσίες</a></p>
+        <p class="center-link"><a class="btn" href="ypiresies.html">Όλες οι υπηρεσίες</a></p>
       </div>
     </section>
-    <section class="section steps-section">
-      <div class="container">
-        <div class="section-head reveal">
-          <p class="eyebrow">Πώς λειτουργεί</p>
-          <h2>Τρία βήματα για το ραντεβού σας</h2>
-        </div>
-        <ol class="steps">
-          <li class="reveal" style="--i:0"><span>01</span><h3>Επικοινωνία</h3><p>Τηλεφωνικά στο ${esc(clinic.phone)} ή με email στο ${esc(clinic.email)}.</p></li>
-          <li class="reveal" style="--i:1"><span>02</span><h3>Ραντεβού</h3><p>${esc(clinic.hours)}. Επιλέγουμε μαζί την ώρα που σας εξυπηρετεί.</p></li>
-          <li class="reveal" style="--i:2"><span>03</span><h3>Επίσκεψη</h3><p>${esc(clinic.address)}. Εξέταση, ενημέρωση και πλάνο παρακολούθησης.</p></li>
-        </ol>
-      </div>
-    </section>
-    ${cta}
   </main>
   ${footer()}`);
 }
@@ -655,7 +578,7 @@ function home() {
 function doctor() {
   const description = `Βιογραφικό ${clinic.doctor}, ${clinic.roleEl}. Διδάκτωρ ΑΠΘ, MSc Πανεπιστήμιο Θεσσαλίας, μετεκπαίδευση στη ρομποτική και λαπαροσκοπική χειρουργική στη Γερμανία.`;
   out("o-giatros.html", `${head(`${clinic.doctor} | ${clinic.roleEl}`, description, "o-giatros.html", [
-    breadcrumb("Ο Γιατρός", "o-giatros.html"),
+    breadcrumb("Ο Ιατρός", "o-giatros.html"),
     {
       "@context": "https://schema.org",
       "@type": "Physician",
@@ -677,7 +600,7 @@ function doctor() {
   <main id="main">
     <section class="page-hero">
       <div class="container">
-        <p class="eyebrow">Ο Γιατρός</p>
+        <p class="eyebrow">Ο Ιατρός</p>
         <h1>${esc(clinic.name)}</h1>
         <p>MD, MSc, MIGS, PhD · ${esc(clinic.roleEl)}</p>
       </div>
@@ -686,14 +609,14 @@ function doctor() {
       <div class="container split">
         <div class="reveal">
           <p class="eyebrow">Προφίλ</p>
-          <h2 class="line-reveal"><span>Ελάχιστα επεμβατική γυναικολογική χειρουργική</span></h2>
-          <p class="lead">Στόχος μας είναι η σύγχρονη, επιστημονικά τεκμηριωμένη και ανθρώπινη προσέγγιση, με σεβασμό στις ανάγκες και τις επιθυμίες κάθε γυναίκας.</p>
+          <h2 class="display display-sm">${esc(clinic.roleEl)}</h2>
+          <p>${esc(welcome)}</p>
+          <p class="accent-text">${esc(care)}</p>
           <p>Η εκπαίδευση στο Evangelisches Krankenhaus Bethesda Duisburg καλύπτει τη λαπαροσκοπική, υστεροσκοπική, ρομποτική και κολπική χειρουργική, καθώς και την αντιμετώπιση της υπογονιμότητας.</p>
         </div>
-        <div class="doctor-figure reveal" style="--i:1">
-          <img src="assets/giatros.jpg" alt="${attr(clinic.doctor)}" width="825" height="1100" loading="lazy" decoding="async" />
-          <figcaption><strong>${esc(clinic.doctor)}</strong><span>${esc(clinic.role)}</span></figcaption>
-        </div>
+        <figure class="photo photo-portrait reveal" style="--i:1">
+          <img src="assets/giatros.jpg" alt="${attr(clinic.doctor)}" width="750" height="1000" loading="lazy" decoding="async" />
+        </figure>
       </div>
     </section>
     <section class="section section-alt" id="viografiko">
@@ -815,7 +738,7 @@ function doctor() {
         </ol>
       </div>
     </section>
-    <section class="section">
+    <section class="section section-tint" id="galeria">
       <div class="container">
         <div class="section-head reveal">
           <p class="eyebrow">Κλινικό έργο</p>
@@ -826,7 +749,6 @@ function doctor() {
         </div>
       </div>
     </section>
-    ${cta}
   </main>
   ${footer()}`);
 }
@@ -847,9 +769,9 @@ function servicesPage() {
   <main id="main">
     <section class="page-hero">
       <div class="container">
-        <p class="eyebrow">Υπηρεσίες</p>
-        <h1>Γυναικολογικές υπηρεσίες</h1>
-        <p>Σύγχρονη, επιστημονικά τεκμηριωμένη και ανθρώπινη προσέγγιση, με σεβασμό στις ανάγκες και τις επιθυμίες κάθε γυναίκας.</p>
+        <p class="eyebrow">${esc(clinic.name)}</p>
+        <h1>Υπηρεσίες</h1>
+        <p>${esc(care)}</p>
         <ul class="chip-nav">
           ${serviceGroups.map((group) => `<li><a href="#${group.slug}">${esc(group.title)}</a></li>`).join("\n          ")}
         </ul>
@@ -873,7 +795,6 @@ function servicesPage() {
           .join("\n        ")}
       </div>
     </section>
-    ${cta}
   </main>
   ${footer()}`);
 }
@@ -904,11 +825,14 @@ function contact() {
           <h2>Άμεση επικοινωνία</h2>
           <p>Καλέστε μας ή στείλτε email και θα επικοινωνήσουμε μαζί σας για το ραντεβού σας.</p>
           <div class="cta-actions">
-            <a href="tel:${clinic.phoneHref}" class="btn btn-primary magnetic">Καλέστε ${esc(clinic.phone)}</a>
-            <a href="mailto:${clinic.email}" class="btn btn-ghost magnetic">Στείλτε email</a>
+            <a href="tel:${clinic.phoneHref}" class="btn">Καλέστε ${esc(clinic.phone)}</a>
+            <a href="mailto:${clinic.email}" class="btn btn-outline">Στείλτε email</a>
           </div>
-          <a class="text-link arrow-link" href="${clinic.maps}" target="_blank" rel="noopener noreferrer">Οδηγίες στον χάρτη</a>
+          <a class="more-link" href="${clinic.maps}" target="_blank" rel="noopener noreferrer">Οδηγίες στον χάρτη</a>
         </aside>
+      </div>
+      <div class="container">
+        <iframe class="contact-map reveal" src="${attr(clinic.mapEmbed)}" title="Χάρτης — ${attr(clinic.address)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </section>
   </main>

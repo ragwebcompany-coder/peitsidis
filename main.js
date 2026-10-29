@@ -4,7 +4,6 @@
 
   var reduceMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var finePointer = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   /* ---------- Τρέχον έτος ---------- */
   var year = document.getElementById("year");
@@ -28,69 +27,73 @@
     });
   }
 
-  /* ---------- Header shadow + scroll progress + parallax ---------- */
+  /* ---------- Header shadow + scroll progress ---------- */
   var header = document.querySelector(".site-header");
   var progress = document.querySelector(".scroll-progress span");
-  var parallaxEls = [].slice.call(document.querySelectorAll("[data-parallax]"));
   var ticking = false;
 
   function onFrame() {
     ticking = false;
     var y = window.scrollY || window.pageYOffset;
-
     if (header) header.classList.toggle("scrolled", y > 24);
-
     if (progress) {
       var max = document.documentElement.scrollHeight - window.innerHeight;
       progress.style.setProperty("--p", max > 0 ? Math.min(y / max, 1) : 0);
     }
-
-    if (!reduceMotion && parallaxEls.length && y < window.innerHeight * 1.6) {
-      parallaxEls.forEach(function (el) {
-        var depth = parseFloat(el.getAttribute("data-parallax")) || 0;
-        el.style.setProperty("--py", (y / 100) * depth + "px");
-      });
-    }
   }
-
   function requestFrame() {
     if (!ticking) {
       ticking = true;
       window.requestAnimationFrame(onFrame);
     }
   }
-
   onFrame();
   window.addEventListener("scroll", requestFrame, { passive: true });
   window.addEventListener("resize", requestFrame, { passive: true });
 
-  /* ---------- Counters ---------- */
-  function runCounter(el) {
-    var target = parseFloat(el.getAttribute("data-count")) || 0;
-    var suffix = el.getAttribute("data-suffix") || "";
-    if (reduceMotion) {
-      el.textContent = target + suffix;
-      return;
+  /* ---------- Hero slider ---------- */
+  var slider = document.querySelector(".hero-slider");
+  if (slider) {
+    var slides = [].slice.call(slider.querySelectorAll(".slide"));
+    var dots = [].slice.call(slider.querySelectorAll(".slider-dots button"));
+    var current = 0;
+    var timer = null;
+
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle("is-active", i === current);
+        slide.setAttribute("aria-hidden", i === current ? "false" : "true");
+        if (i === current) {
+          var img = slide.querySelector("img");
+          if (img) img.loading = "eager";
+        }
+      });
+      dots.forEach(function (dot, i) {
+        if (i === current) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
     }
-    var duration = 1400;
-    var start = null;
-    function step(now) {
-      if (start === null) start = now;
-      var t = Math.min((now - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - t, 3);
-      el.textContent = Math.round(target * eased) + suffix;
-      if (t < 1) window.requestAnimationFrame(step);
+    function restart() {
+      if (reduceMotion) return;
+      window.clearInterval(timer);
+      timer = window.setInterval(function () { show(current + 1); }, 6000);
     }
-    window.requestAnimationFrame(step);
+    var prev = slider.querySelector(".slider-prev");
+    var next = slider.querySelector(".slider-next");
+    if (prev) prev.addEventListener("click", function () { show(current - 1); restart(); });
+    if (next) next.addEventListener("click", function () { show(current + 1); restart(); });
+    dots.forEach(function (dot, i) {
+      dot.addEventListener("click", function () { show(i); restart(); });
+    });
+    restart();
   }
 
   /* ---------- Reveal on scroll ---------- */
-  var revealEls = [].slice.call(document.querySelectorAll(".reveal, .steps li"));
-  var counters = [].slice.call(document.querySelectorAll(".count"));
+  var revealEls = [].slice.call(document.querySelectorAll(".reveal"));
 
   function revealAll() {
     revealEls.forEach(function (el) { el.classList.add("in"); });
-    counters.forEach(runCounter);
   }
 
   if (reduceMotion || location.hash === "#showall" || !("IntersectionObserver" in window)) {
@@ -101,13 +104,12 @@
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
           entry.target.classList.add("in");
-          if (entry.target.classList.contains("count")) runCounter(entry.target);
           io.unobserve(entry.target);
         });
       },
       { threshold: 0.12, rootMargin: "0px 0px -60px 0px" }
     );
-    revealEls.concat(counters).forEach(function (el) { io.observe(el); });
+    revealEls.forEach(function (el) { io.observe(el); });
 
     // Δικλείδα ασφαλείας: τίποτα δεν μένει κρυμμένο αν κάτι πάει στραβά.
     window.setTimeout(function () {
@@ -177,43 +179,4 @@
     });
   }
 
-  if (reduceMotion) return;
-
-  /* ---------- Spotlight στις κάρτες ---------- */
-  if (finePointer) {
-    document.querySelectorAll(".spotlight").forEach(function (card) {
-      card.addEventListener("pointermove", function (e) {
-        var rect = card.getBoundingClientRect();
-        card.style.setProperty("--mx", e.clientX - rect.left + "px");
-        card.style.setProperty("--my", e.clientY - rect.top + "px");
-      });
-    });
-
-    /* ---------- Tilt 3D ---------- */
-    document.querySelectorAll(".tilt").forEach(function (el) {
-      el.addEventListener("pointermove", function (e) {
-        if (el.classList.contains("reveal") && !el.classList.contains("in")) return;
-        var rect = el.getBoundingClientRect();
-        var rx = ((e.clientY - rect.top) / rect.height - 0.5) * -6;
-        var ry = ((e.clientX - rect.left) / rect.width - 0.5) * 6;
-        el.style.transform = "perspective(900px) rotateX(" + rx + "deg) rotateY(" + ry + "deg)";
-      });
-      el.addEventListener("pointerleave", function () {
-        el.style.transform = "";
-      });
-    });
-
-    /* ---------- Magnetic buttons ---------- */
-    document.querySelectorAll(".magnetic").forEach(function (btn) {
-      btn.addEventListener("pointermove", function (e) {
-        var rect = btn.getBoundingClientRect();
-        var x = (e.clientX - rect.left - rect.width / 2) * 0.18;
-        var y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-        btn.style.transform = "translate(" + x + "px, " + y + "px)";
-      });
-      btn.addEventListener("pointerleave", function () {
-        btn.style.transform = "";
-      });
-    });
-  }
 })();
