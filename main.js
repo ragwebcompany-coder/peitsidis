@@ -51,44 +51,6 @@
   window.addEventListener("scroll", requestFrame, { passive: true });
   window.addEventListener("resize", requestFrame, { passive: true });
 
-  /* ---------- Hero slider ---------- */
-  var slider = document.querySelector(".hero-slider");
-  if (slider) {
-    var slides = [].slice.call(slider.querySelectorAll(".slide"));
-    var dots = [].slice.call(slider.querySelectorAll(".slider-dots button"));
-    var current = 0;
-    var timer = null;
-
-    function show(index) {
-      current = (index + slides.length) % slides.length;
-      slides.forEach(function (slide, i) {
-        slide.classList.toggle("is-active", i === current);
-        slide.setAttribute("aria-hidden", i === current ? "false" : "true");
-        if (i === current) {
-          var img = slide.querySelector("img");
-          if (img) img.loading = "eager";
-        }
-      });
-      dots.forEach(function (dot, i) {
-        if (i === current) dot.setAttribute("aria-current", "true");
-        else dot.removeAttribute("aria-current");
-      });
-    }
-    function restart() {
-      if (reduceMotion) return;
-      window.clearInterval(timer);
-      timer = window.setInterval(function () { show(current + 1); }, 6000);
-    }
-    var prev = slider.querySelector(".slider-prev");
-    var next = slider.querySelector(".slider-next");
-    if (prev) prev.addEventListener("click", function () { show(current - 1); restart(); });
-    if (next) next.addEventListener("click", function () { show(current + 1); restart(); });
-    dots.forEach(function (dot, i) {
-      dot.addEventListener("click", function () { show(i); restart(); });
-    });
-    restart();
-  }
-
   /* ---------- Reveal on scroll ---------- */
   var revealEls = [].slice.call(document.querySelectorAll(".reveal"));
 

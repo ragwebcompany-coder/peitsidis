@@ -157,19 +157,15 @@ p { margin: 0 0 1rem; }
   color: var(--blue-700);
 }
 
-/* ---------- Hero slider ---------- */
-.hero-slider {
+/* ---------- Hero: μόνο μάρμαρο ---------- */
+.hero-marble {
   position: relative;
   height: clamp(460px, calc(100vh - var(--topbar-h) - var(--nav-h)), 760px);
   overflow: hidden;
-  background: var(--dark);
+  background: var(--marble) center / cover no-repeat;
 }
-.slides, .slide { position: absolute; inset: 0; margin: 0; }
-.slide { opacity: 0; transition: opacity 1.2s ease; }
-.slide.is-active { opacity: 1; }
-.slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); transition: transform 7s linear; }
-.slide.is-active img { transform: scale(1); }
-.slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20, 35, 55, .35), transparent 60%); }
+.hero-marble .hero-card-wrap { justify-content: center; }
+.hero-marble .hero-card { width: min(100%, 520px); text-align: center; background: rgba(255, 255, 255, .72); backdrop-filter: blur(2px); }
 .hero-card-wrap { position: relative; z-index: 2; height: 100%; display: flex; align-items: center; }
 .hero-card {
   width: min(100%, 380px);
@@ -182,26 +178,6 @@ p { margin: 0 0 1rem; }
 .hero-card h1 span { display: block; color: var(--blue-700); }
 .hero-card-sub { font-family: var(--display); font-size: 1.05rem; color: var(--ink); }
 .hero-card-role { margin: 0; padding-top: 1rem; border-top: 1px solid var(--line); font-size: .86rem; line-height: 1.55; }
-.slider-arrow {
-  position: absolute; top: 50%; z-index: 3;
-  width: 48px; height: 48px; margin-top: -24px;
-  border: 0; background: transparent; cursor: pointer;
-}
-.slider-arrow span {
-  display: block; width: 16px; height: 16px; margin: auto;
-  border-left: 2px solid rgba(255, 255, 255, .85); border-bottom: 2px solid rgba(255, 255, 255, .85);
-}
-.slider-prev { left: 1rem; }
-.slider-prev span { transform: rotate(45deg); }
-.slider-next { right: 1rem; }
-.slider-next span { transform: rotate(-135deg); }
-.slider-dots { position: absolute; left: 0; right: 0; bottom: 1.2rem; z-index: 3; display: flex; justify-content: center; gap: .5rem; }
-.slider-dots button {
-  width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%;
-  background: rgba(255, 255, 255, .5); cursor: pointer; transition: background .3s, transform .3s;
-}
-.slider-dots button[aria-current="true"] { background: var(--white); transform: scale(1.2); }
-
 /* ---------- Ενότητες ---------- */
 .section { padding: clamp(4rem, 9vw, 6.5rem) 0; }
 .section-tint { background: var(--blue-50); }
@@ -230,6 +206,7 @@ p { margin: 0 0 1rem; }
 .service-block + .service-block { margin-top: clamp(3rem, 6vw, 4.5rem); }
 .section-alt { background: var(--blue-50); }
 .lead { font-size: 1.02rem; }
+.welcome { max-width: 760px; text-align: center; }
 
 /* ---------- Φωτογραφίες ---------- */
 .photo { margin: 0; overflow: hidden; box-shadow: 0 30px 60px -40px rgba(20, 40, 70, .5); }
@@ -434,11 +411,9 @@ p { margin: 0 0 1rem; }
   .split > div { max-width: none; }
   .split-reverse .photo { order: 0; }
   .section-marble { background-attachment: scroll; }
-  .hero-slider { height: auto; min-height: 520px; display: flex; flex-direction: column; justify-content: flex-end; }
-  .hero-card-wrap { height: auto; padding: 9rem 0 3.5rem; }
+  .hero-marble { height: auto; min-height: 420px; display: flex; flex-direction: column; justify-content: center; }
+  .hero-card-wrap { height: auto; padding: 3.5rem 0; }
   .hero-card { width: 100%; }
-  .slider-arrow { top: 6rem; }
-  .slider-dots { top: auto; bottom: .8rem; }
   .timeline article, .contact-list div, .timeline-cv article { grid-template-columns: 1fr; gap: .25rem; }
   .collage { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 130px; }
   .g-item, .g-item.g-std, .g-item.g-big, .g-item.g-tall, .g-item.g-wide, .g-note { grid-column: span 1; grid-row: span 2; }
