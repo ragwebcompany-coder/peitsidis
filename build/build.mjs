@@ -607,7 +607,7 @@ function home() {
     <section class="section section-dark" id="giatros">
       <div class="container split split-reverse">
         <figure class="photo photo-portrait reveal">
-          <img src="assets/giatros-grafeio.jpg" alt="${attr(clinic.doctor)}" width="944" height="1133" loading="lazy" decoding="async" />
+          <img src="assets/giatros-portreto.jpg" alt="${attr(clinic.doctor)}" width="944" height="1133" loading="lazy" decoding="async" />
         </figure>
         <div class="reveal" style="--i:1">
           <p class="eyebrow">Ο Ιατρός</p>
@@ -658,7 +658,7 @@ function doctor() {
       jobTitle: clinic.roleEl,
       medicalSpecialty: "ObstetricsAndGynecology",
       url: `${BASE}/o-giatros.html`,
-      image: `${BASE}/assets/giatros-grafeio.jpg`,
+      image: `${BASE}/assets/giatros-portreto.jpg`,
       telephone: clinic.phoneHref,
       email: clinic.email,
       worksFor: { "@id": `${BASE}/#clinic` },
@@ -688,7 +688,7 @@ function doctor() {
           ${shortBio.map((text) => `<p>${esc(text)}</p>`).join("\n          ")}
         </div>
         <figure class="photo photo-portrait reveal" style="--i:1">
-          <img src="assets/giatros-grafeio.jpg" alt="${attr(clinic.doctor)}" width="944" height="1133" loading="lazy" decoding="async" />
+          <img src="assets/giatros-portreto.jpg" alt="${attr(clinic.doctor)}" width="944" height="1133" loading="lazy" decoding="async" />
         </figure>
       </div>
     </section>
