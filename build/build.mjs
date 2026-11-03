@@ -496,7 +496,7 @@ function footer() {
     </div>
     <div class="footer-bottom">
       <p>© <span id="year">${UPDATED.slice(0, 4)}</span> ${esc(clinic.name)}</p>
-      <p>Made by <a href="https://clinicbrain.gr/?utm_source=client-site&amp;utm_medium=footer&amp;utm_campaign=made-by" target="_blank" rel="noopener noreferrer">CLINICBRAIN</a></p>
+      <p>Made by <a href="https://astramarketing.gr/?utm_source=client-site&amp;utm_medium=footer&amp;utm_campaign=made-by" target="_blank" rel="noopener noreferrer">Astra</a></p>
     </div>
   </footer>
   <script src="main.js" defer></script>
