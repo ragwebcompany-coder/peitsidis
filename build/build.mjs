@@ -594,16 +594,6 @@ function home() {
         </div>
       </div>
     </section>
-    <section class="section section-tint">
-      <div class="container welcome">
-        <div class="reveal">
-          <h2 class="display">Καλώς ήρθατε</h2>
-          <p>${esc(welcome)}</p>
-          <p class="accent-text">${esc(clinic.slogan)}<br />${esc(clinic.sloganSub)}</p>
-          <p>${esc(care)}</p>
-        </div>
-      </div>
-    </section>
     <section class="section section-dark" id="giatros">
       <div class="container split split-reverse">
         <figure class="photo photo-portrait reveal">
@@ -613,8 +603,18 @@ function home() {
           <p class="eyebrow">Ο Ιατρός</p>
           <h2 class="name-title">Νικόλαος<br />Πεϊτσίδης</h2>
           <p>${esc(shortBio[0])}</p>
-          <p>${esc(shortBio[3])}</p>
+          <p>${esc(shortBio[1])}</p>
           <a class="btn" href="o-giatros.html">Περισσότερα</a>
+        </div>
+      </div>
+    </section>
+    <section class="section section-tint">
+      <div class="container welcome">
+        <div class="reveal">
+          <h2 class="display">Καλώς ήρθατε</h2>
+          <p>${esc(welcome)}</p>
+          <p class="accent-text">${esc(clinic.slogan)}<br />${esc(clinic.sloganSub)}</p>
+          <p>${esc(care)}</p>
         </div>
       </div>
     </section>
