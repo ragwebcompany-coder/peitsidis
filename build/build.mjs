@@ -5,7 +5,7 @@ import { education, licenses, career, skills, conferences, presentations, public
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 // Ο πελάτης δεν έχει ακόμη domain. Άλλαξε μόνο εδώ όταν κατοχυρωθεί.
-const BASE = "https://peitsidis.gr";
+const BASE = "https://drpeitsidis.gr";
 const UPDATED = "2026-11-03";
 
 const clinic = {
